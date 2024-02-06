@@ -19,7 +19,11 @@ def Tracker():
   tweight = "bold"
   
   titlefont = CTkFont(family=Autumn, size= tsize, weight= tweight)
-  title = CTkLabel(window, text_color="hotpink", text = "Amina's Fitness Tracker", font=titlefont, bg_color="white")
+  title = CTkLabel(window, 
+                   text_color="hotpink", 
+                   text = "Amina's Fitness Tracker", 
+                   font=titlefont, 
+                   bg_color="white")
   title.place(x=40, y=180)
 
   back1 = Image.open("pink2.png")
@@ -41,17 +45,76 @@ def Tracker():
 
     class MyWindow:
       def __init__(self, win):
-        self.am = CTkButton(win, text='Add Meals', command=self.add,bg_color="white", fg_color="hotpink", corner_radius=64)       
+        self.am = CTkButton(win, 
+                            text='Add Meals', 
+                            command=self.add,
+                            bg_color="white", 
+                            fg_color="hotpink", 
+                            hover_color="hotpink4",
+                            corner_radius=64)       
         self.am.place(x=260, y=300)
-        self.md = CTkButton(win, text = 'Meals of the Day', command = self.meals, bg_color="white", fg_color="hotpink", corner_radius=64)
+        self.md = CTkButton(win, 
+                            text = 'Meals of the Day', 
+                            command = self.meals, 
+                            bg_color="white", 
+                            fg_color="hotpink",
+                            hover_color="hotpink4", 
+                            corner_radius=64)
         self.md.place(x=260, y=340)
         
 
       def add(self):
         class AddCal:
           def __init__(self, win):
-            self.add = CTkEntry(win, bg_color="white", fg_color="white", corner_radius=64, border_color="hotpink", text_color="black")
-            self.add.place(x=200, y=200)
+            Autumn = "Autumn in November"
+            size = 20
+            weight = "bold"
+            labelfont = CTkFont(family=Autumn, size= size, weight= weight)
+    
+            self.add = CTkEntry(win, 
+                                bg_color="white", 
+                                fg_color="white", 
+                                corner_radius=64, 
+                                border_color="hotpink", 
+                                text_color="black")
+            self.add.place(x=260, y=200)
+            def CalSlider(value):
+              self.calint.configure(text=int(value))
+
+            self.cal = CTkSlider(win,
+                                 bg_color="white",
+                                 progress_color="hotpink",
+                                 button_color= "hotpink",
+                                 button_hover_color="hotpink4",
+                                 orientation="horizontal",
+                                 from_=0,
+                                 to=200,
+                                 command=CalSlider)
+            self.cal.set(0)
+            self.cal.place(x=245, y=270)
+            self.calint = CTkLabel(win,
+                                   bg_color="white",
+                                   text_color="black",
+                                   text="")
+            self.calint.place(x=450, y=265)
+            self.calname = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Calories",
+                                font=labelfont)
+            self.calname.place(x=300,y=235)
+            def Submit():
+              food = self.add.get()
+            self.addfood = CTkButton(win,
+                                text = "->",
+                                width=3, 
+                                bg_color="white", 
+                                fg_color="hotpink", 
+                                corner_radius=64, 
+                                text_color="white",
+                                hover_color="hotpink4",
+                                command=Submit)
+            self.addfood.place(x=410, y=200)
         win2 = CTk()
         addwin = AddCal(win2)
         win2.title('Add Meals') 
@@ -80,24 +143,57 @@ def Tracker():
     tweight = "bold"
       
     titlefont = CTkFont(family=Autumn, size= tsize, weight= tweight)
-    title = CTkLabel(win, text_color="hotpink", text = "Calories & Macros", font=titlefont, bg_color="white")
+    title = CTkLabel(win, 
+                     text_color="hotpink", 
+                     text = "Calories & Macros", 
+                     font=titlefont, 
+                     bg_color="white")
     title.place(x=85, y=180)
     win.mainloop()
 
     
   def Weight():
-    window.withdraw()
-    import weight
+    class Meals:
+      def __init__(self, win):
+        self
+    win4 = CTk()
+    mealwin = Meals(win4)
+    win4.title('Meals of the Day')
+    win4.geometry("650x600")
+    win4.config(bg='white')
+    win4.mainloop()
 
   def Steps():
-    window.withdraw()
-    import step
+    class Meals:
+      def __init__(self, win):
+        self
+    win5 = CTk()
+    mealwin = Meals(win5)
+    win5.title('Meals of the Day')
+    win5.geometry("650x600")
+    win5.config(bg='white')
+    win5.mainloop()
+    
   def Workouts():
-    window.withdraw()
-    import workout
+    class Meals:
+      def __init__(self, win):
+        self
+    win6 = CTk()
+    mealwin = Meals(win6)
+    win6.title('Meals of the Day')
+    win6.geometry("650x600")
+    win6.config(bg='white')
+    win6.mainloop()
   def Achievements():
-    window.withdraw()
-    import achievements
+    class Meals:
+      def __init__(self, win):
+        self
+    win7 = CTk()
+    mealwin = Meals(win7)
+    win7.title('Meals of the Day')
+    win7.geometry("650x600")
+    win7.config(bg='white')
+    win7.mainloop()
 
   
   
@@ -105,15 +201,28 @@ def Tracker():
   workouts = 0 
   workoutgoal = 10
 
-  exercisebar = CTkProgressBar(master=window, mode = 'determinate', progress_color='hotpink', width=130)
+  exercisebar = CTkProgressBar(master=window, 
+                               mode = 'determinate', 
+                               progress_color='hotpink', 
+                               width=130)
   exercisebar.set(0)
   exercisebar.place(x=185, y=350)
 
-  proglabel = CTkLabel(master=window, text = "0/10 Completed!", fg_color="white", bg_color="white", text_color="hotpink")
+  proglabel = CTkLabel(master=window, 
+                       text = "0/10 Completed!", 
+                       fg_color="white", 
+                       bg_color="white", 
+                       text_color="hotpink")
   proglabel.place(x=205, y=360)
 
 
-  workout = CTkButton(master=window, text = "Workouts", command=Workouts, bg_color="white", fg_color="hotpink", corner_radius=64)
+  workout = CTkButton(master=window, 
+                      text = "Workouts", 
+                      command=Workouts, 
+                      bg_color="white", 
+                      fg_color="hotpink",
+                      hover_color="hotpink4", 
+                      corner_radius=64)
   workout.place(x = 180, y =315)
 
 
@@ -137,16 +246,40 @@ def Tracker():
 
 
   
-  calmac = CTkButton(master=window, text="Calories/Macros Tracker", bg_color="white", fg_color="hotpink", command=Cal,corner_radius=64)
+  calmac = CTkButton(master=window, 
+                     text="Calories/Macros Tracker", 
+                     bg_color="white", 
+                     fg_color="hotpink", 
+                     hover_color="hotpink4",
+                     command=Cal,
+                     corner_radius=64)
   calmac.place(x=75, y=270)
 
-  weight = CTkButton(master=window, text="Weight Tracker", bg_color="white", fg_color="hotpink", command=Weight,corner_radius=64)
+  weight = CTkButton(master=window, 
+                     text="Weight Tracker", 
+                     bg_color="white", 
+                     fg_color="hotpink", 
+                     hover_color="hotpink4",
+                     command=Weight,
+                     corner_radius=64)
   weight.place(x=260, y=270)
 
-  step = CTkButton(master=window, text="Steps Tracker", bg_color="white", fg_color="hotpink", command=Steps,corner_radius=64)
+  step = CTkButton(master=window, 
+                   text="Steps Tracker", 
+                   bg_color="white", 
+                   fg_color="hotpink", 
+                   hover_color="hotpink4",
+                   command=Steps,
+                   corner_radius=64)
   step.place(x=415, y=270)
 
-  achievements = CTkButton(master=window, text = "Achievements", bg_color="white", fg_color="hotpink", command =Achievements, corner_radius=64)
+  achievements = CTkButton(master=window, 
+                           text = "Achievements", 
+                           bg_color="white", 
+                           fg_color="hotpink", 
+                           hover_color="hotpink4",
+                           command =Achievements, 
+                           corner_radius=64)
   achievements.place(x=335, y=315)
  
 
