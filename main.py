@@ -1,10 +1,13 @@
-from csv import *
+import csv
 from os import spawnve
 from tkinter import *
 from tkinter import ttk
 from customtkinter import *
 from PIL import Image, ImageTk
-
+from CTkMessagebox import CTkMessagebox
+import schedule
+import time
+import pandas as pd
 
 
 
@@ -40,8 +43,10 @@ def Tracker():
   backlabel2.place(x=100, y=420)
   backlabel2.lower()
 
+ 
 
   def Cal():
+
 
     class MyWindow:
       def __init__(self, win):
@@ -66,10 +71,18 @@ def Tracker():
       def add(self):
         class AddCal:
           def __init__(self, win):
+
             Autumn = "Autumn in November"
             size = 20
             weight = "bold"
             labelfont = CTkFont(family=Autumn, size= size, weight= weight)
+
+            title = CTkLabel(win,
+                             text="Add Foods", 
+                             font=titlefont, 
+                             bg_color="white", 
+                             text_color="hotpink")
+            title.place(x=185, y=100)
     
             self.add = CTkEntry(win, 
                                 bg_color="white", 
@@ -78,8 +91,11 @@ def Tracker():
                                 border_color="hotpink", 
                                 text_color="black")
             self.add.place(x=260, y=200)
+
+
             def CalSlider(value):
               self.calint.configure(text=int(value))
+            
 
             self.cal = CTkSlider(win,
                                  bg_color="white",
@@ -89,22 +105,41 @@ def Tracker():
                                  orientation="horizontal",
                                  from_=0,
                                  to=200,
+                                 number_of_steps=200,
                                  command=CalSlider)
             self.cal.set(0)
             self.cal.place(x=245, y=270)
+
+            
+
             self.calint = CTkLabel(win,
                                    bg_color="white",
                                    text_color="black",
                                    text="")
-            self.calint.place(x=450, y=265)
+            self.calint.place(x=450, y=263)
+
             self.calname = CTkLabel(win,
                                 bg_color = "white",
                                 text_color="hotpink",
                                 text="Calories",
                                 font=labelfont)
             self.calname.place(x=300,y=235)
+
             def Submit():
               food = self.add.get()
+              calories = int(self.cal.get())
+              protein = int(self.pro.get())
+              carbs = int(self.carb.get())
+              fats = int(self.fat.get())
+              
+              
+              
+              with open('foods.csv', 'a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([food, calories, protein, carbs, fats])
+                self.add.delete(0, END)
+            
+
             self.addfood = CTkButton(win,
                                 text = "->",
                                 width=3, 
@@ -115,6 +150,99 @@ def Tracker():
                                 hover_color="hotpink4",
                                 command=Submit)
             self.addfood.place(x=410, y=200)
+
+            def ProSlider(value):
+              self.proint.configure(text=int(value))
+
+            self.pro = CTkSlider(win,
+                                 bg_color="white",
+                                 progress_color="hotpink",
+                                 button_color= "hotpink",
+                                 button_hover_color="hotpink4",
+                                 orientation="horizontal",
+                                 from_=0,
+                                 to=200,
+                                 number_of_steps=200,
+                                 command=ProSlider)
+            self.pro.set(0)
+            self.pro.place(x=245, y=320)
+
+            
+
+            self.proint = CTkLabel(win,
+                                   bg_color="white",
+                                   text_color="black",
+                                   text="")
+            self.proint.place(x=450, y=313)
+
+            self.proname = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Protein",
+                                font=labelfont)
+            self.proname.place(x=300,y=290)
+
+            def CarbSlider(value):
+              self.carbint.configure(text=int(value))
+
+            self.carb = CTkSlider(win,
+                                 bg_color="white",
+                                 progress_color="hotpink",
+                                 button_color= "hotpink",
+                                 button_hover_color="hotpink4",
+                                 orientation="horizontal",
+                                 from_=0,
+                                 to=200,
+                                 number_of_steps=200,
+                                 command=CarbSlider)
+            self.carb.set(0)
+            self.carb.place(x=245, y=370)
+
+            
+
+            self.carbint = CTkLabel(win,
+                                   bg_color="white",
+                                   text_color="black",
+                                   text="")
+            self.carbint.place(x=450, y=363)
+
+            self.carbname = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Carbs",
+                                font=labelfont)
+            self.carbname.place(x=300,y=340)
+
+            def FatSlider(value):
+              self.fatint.configure(text=int(value))
+            
+            self.fat = CTkSlider(win,
+                                 bg_color="white",
+                                 progress_color="hotpink",
+                                 button_color= "hotpink",
+                                 button_hover_color="hotpink4",
+                                 orientation="horizontal",
+                                 from_=0,
+                                 to=200,
+                                 number_of_steps=200,
+                                 command=FatSlider)
+            self.fat.set(0)
+            self.fat.place(x=245, y=420)
+
+            self.fatint = CTkLabel(win,
+                                   bg_color="white",
+                                   text_color="black",
+                                   text="")
+            self.fatint.place(x=450, y=413)
+
+            self.fatname = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Fats",
+                                font=labelfont)
+            self.fatname.place(x=300,y=390)
+
+
         win2 = CTk()
         addwin = AddCal(win2)
         win2.title('Add Meals') 
@@ -122,14 +250,80 @@ def Tracker():
         win2.config(bg='white')
         win2.mainloop()
       def meals(self):
+        import customtkinter
         class Meals:
           def __init__(self, win):
-            self
+
+            i = 0
+
+            self.maclabel = CTkLabel(win,
+                                     bg_color="white",
+                                     fg_color="white",
+                                     text_color="black",
+                                     text = "Calories:          Protein:          Carbs:          Fats: ")
+            self.maclabel.place(x=180, y=320)
+
+            def Show(value):
+              with open('foods.csv', 'r', newline='') as file:
+                macreader = csv.reader(file)
+                for row in macreader:
+                  if row[0] == value:
+                    c = row[1]
+                    p = row[2]
+                    ca = row[3]
+                    f = row[4]
+                    break
+                self.maclabel.configure(text= f"Calories: {c}    Protein: {p}    Carbs: {ca}    Fats: {f}")
+                i = value
+
+
+            self.allmeals = CTkComboBox(win,
+                            bg_color="white",
+                            fg_color="white",
+                            button_color="hotpink",
+                            button_hover_color="hotpink4",
+                            dropdown_text_color="white",
+                            dropdown_fg_color="hotpink",
+                            dropdown_hover_color="hotpink4",
+                            text_color="black",
+                            values=["Choose a meal"], 
+                            command=Show
+                            )
+            self.allmeals.place(relx=0.5,rely=0.5,anchor="center")
+            with open('foods.csv', 'r', newline='') as file:
+              reader = csv.reader(file)
+              foods = [row[0] for row in reader]
+              self.allmeals.configure(values=foods)
+              
+            
+            def Delete():
+              delete = pd.read_csv('foods.csv')
+              delete = delete.drop(delete["bana"].index)
+              delete.to_csv('foods.csv',index=False)
+
+              
+            deletebtn = CTkButton(win,
+                                  fg_color="hotpink",
+                                  bg_color="white",
+                                  hover_color="hotpink4",
+                                  text="Delete",
+                                  text_color="white",
+                                  command=Delete)
+            deletebtn.place(x=400, y=400)
+              
         win3 = CTk()
         mealwin = Meals(win3)
         win3.title('Meals of the Day')
         win3.geometry("650x600")
         win3.config(bg='white')
+
+        title = CTkLabel(win, 
+                   text_color="hotpink", 
+                   text = "Meals of the Day", 
+                   font=titlefont, 
+                   bg_color="white")
+        title.place(x=80, y=180)
+        
         win3.mainloop()
       
 
@@ -149,9 +343,21 @@ def Tracker():
                      font=titlefont, 
                      bg_color="white")
     title.place(x=85, y=180)
+
+      
+
+    def FoodReset():
+      with open('fods.csv', 'w', newline='') as file:
+        pass
+
+    schedule.every().day.at("00:00").do(FoodReset)
     win.mainloop()
 
-    
+    while True:
+      schedule.run_pending()
+
+
+
   def Weight():
     class Meals:
       def __init__(self, win):
