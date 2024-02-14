@@ -8,8 +8,12 @@ from CTkMessagebox import CTkMessagebox
 import schedule
 import time
 import pandas as pd
-
-
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.figure import Figure
+import numpy as np
 
 def Tracker():
   window = CTk() 
@@ -59,7 +63,7 @@ def Tracker():
                             corner_radius=64)       
         self.am.place(x=260, y=300)
         self.md = CTkButton(win, 
-                            text = 'Meals of the Day', 
+                            text = 'All Meals', 
                             command = self.meals, 
                             bg_color="white", 
                             fg_color="hotpink",
@@ -250,11 +254,10 @@ def Tracker():
         win2.config(bg='white')
         win2.mainloop()
       def meals(self):
-        import customtkinter
+        
         class Meals:
           def __init__(self, win):
 
-            i = 0
 
             self.maclabel = CTkLabel(win,
                                      bg_color="white",
@@ -272,9 +275,127 @@ def Tracker():
                     p = row[2]
                     ca = row[3]
                     f = row[4]
+
                     break
                 self.maclabel.configure(text= f"Calories: {c}    Protein: {p}    Carbs: {ca}    Fats: {f}")
-                i = value
+                
+
+            def Delete():
+              enterfood = CTkEntry(win, 
+                              bg_color="white", 
+                              fg_color="white", 
+                              corner_radius=64, 
+                              border_color="hotpink", 
+                              text_color="black")
+              enterfood.place(x=245, y=390)
+
+              def delsubmit():
+                food = list()
+                with open('foods.csv', 'r', newline='') as file:
+                  reader = csv.reader(file)
+                  for row in reader:
+                    food.append(row)
+                    for f in row:
+                      if f == enterfood.get():
+                        food.remove(row)
+                with open('foods.csv', 'w', newline='') as file:
+                  writer = csv.writer(file)  
+                  writer.writerows(food)
+                with open('foods.csv', 'r', newline='') as file:              
+                  foods = [row[0] for row in reader]
+                  self.allmeals.configure(values=foods)
+              submit = CTkButton(win,
+                                text = "->",
+                                width=3, 
+                                bg_color="white", 
+                                fg_color="hotpink", 
+                                corner_radius=64, 
+                                text_color="white",
+                                hover_color="hotpink4",
+                                command=delsubmit)
+              submit.place(x=295,y=430)
+              
+            deletebtn = CTkButton(win,
+                                    fg_color="hotpink",
+                                    bg_color="white",
+                                    hover_color="hotpink4",
+                                    text="Delete",
+                                    text_color="white",
+                                    corner_radius=64,
+                                    command=Delete)
+            deletebtn.place(x=255, y=350)
+
+            def FoodReset():
+              class Warning:
+                def __init__(self, win):
+
+                  
+
+  
+                  def Final():
+                    with open('foods.csv', 'w', newline='') as file:
+                      pass
+                    warning.destroy()
+
+                  
+
+
+                  def ShowDel():
+                    
+                    if self.warning.get() == 1:
+                      final.pack( side = BOTTOM, pady = 10)
+                    if self.warning.get() ==2:
+                      final.pack_forget()
+
+                  
+                  self.warning = CTkCheckBox(win,
+                                    fg_color="hotpink",
+                                    bg_color="white",
+                                    hover_color="hotpink4",
+                                    text="Checking this means you understand that when you press the arrow button all your data will be deleted.",
+                                    text_color="black",
+                                    corner_radius=64,
+                                    onvalue=1,
+                                    offvalue=2,
+                                    command = ShowDel
+                                    )
+                  self.warning.place(x=40, y=50)
+
+                  final = CTkButton(win,
+                                        width=3,
+                                        fg_color="hotpink",
+                                        bg_color="white",
+                                        hover_color="hotpink4",
+                                        text="->",
+                                        text_color="white",
+                                        corner_radius=64,
+                                        command=Final)
+
+                 
+                  
+              with open('foods.csv', 'r', newline='') as file:
+                reader = csv.reader(file)              
+                foods = [row[0] for row in reader]
+                self.allmeals.configure(values=foods)
+              
+
+                  
+              warning = CTk()
+              warn = Warning(warning)
+              warning.title('WARNING!')
+              warning.geometry("700x150")
+              warning.config(bg='white')
+              warning.mainloop()
+              
+            reset = CTkButton(win,
+                                    fg_color="hotpink",
+                                    bg_color="white",
+                                    hover_color="hotpink4",
+                                    text="Reset",
+                                    text_color="white",
+                                    corner_radius=64,
+                                    command=FoodReset)
+            reset.place(x=410, y=350)
 
 
             self.allmeals = CTkComboBox(win,
@@ -289,40 +410,52 @@ def Tracker():
                             values=["Choose a meal"], 
                             command=Show
                             )
-            self.allmeals.place(relx=0.5,rely=0.5,anchor="center")
+            self.allmeals.place(relx=0.5,rely=0.45,anchor="center")
             with open('foods.csv', 'r', newline='') as file:
               reader = csv.reader(file)
               foods = [row[0] for row in reader]
               self.allmeals.configure(values=foods)
+
+            def Total():
+              with open('foods.csv', 'r', newline='') as file:
+                c = 0
+                p = 0
+                ca = 0
+                f = 0
+                for row in csv.reader(file):
+                  c += int(row[1])
+                  p += int(row[2])
+                  ca += int(row[3])
+                  f += int(row[4])
+              
+              self.maclabel.configure(text= f"Calories: {c}    Protein: {p}    Carbs: {ca}    Fats: {f}")
               
             
-            def Delete():
-              delete = pd.read_csv('foods.csv')
-              delete = delete.drop(delete["bana"].index)
-              delete.to_csv('foods.csv',index=False)
+            self.total = CTkButton(win,
+                                    fg_color="hotpink",
+                                    bg_color="white",
+                                    hover_color="hotpink4",
+                                    text="Total",
+                                    text_color="white",
+                                    corner_radius=64,
+                                    command=Total)
+            self.total.place(x=100,y=350)
+            self.title = CTkLabel(win, 
+                   text_color="hotpink", 
+                   text = "All Meals", 
+                   font=titlefont, 
+                   bg_color="white")
+            self.title.place(x=160, y=130)    
 
-              
-            deletebtn = CTkButton(win,
-                                  fg_color="hotpink",
-                                  bg_color="white",
-                                  hover_color="hotpink4",
-                                  text="Delete",
-                                  text_color="white",
-                                  command=Delete)
-            deletebtn.place(x=400, y=400)
+            
               
         win3 = CTk()
         mealwin = Meals(win3)
-        win3.title('Meals of the Day')
+        win3.title('All Meals')
         win3.geometry("650x600")
         win3.config(bg='white')
 
-        title = CTkLabel(win, 
-                   text_color="hotpink", 
-                   text = "Meals of the Day", 
-                   font=titlefont, 
-                   bg_color="white")
-        title.place(x=80, y=180)
+          
         
         win3.mainloop()
       
@@ -344,27 +477,143 @@ def Tracker():
                      bg_color="white")
     title.place(x=85, y=180)
 
-      
-
-    def FoodReset():
-      with open('fods.csv', 'w', newline='') as file:
-        pass
-
-    schedule.every().day.at("00:00").do(FoodReset)
     win.mainloop()
 
-    while True:
-      schedule.run_pending()
+   
 
 
 
   def Weight():
-    class Meals:
+    class Weight:
       def __init__(self, win):
-        self
+        self.gb = CTkButton(win, 
+                            text='Weight Graph', 
+                            command=self.Graph,
+                            bg_color="white", 
+                            fg_color="hotpink", 
+                            hover_color="hotpink4",
+                            corner_radius=64)       
+        self.gb.place(x=260, y=300)
+        self.aw = CTkButton(win, 
+                            text = 'Add Weight', 
+                            command = self.AddWeight, 
+                            bg_color="white", 
+                            fg_color="hotpink",
+                            hover_color="hotpink4", 
+                            corner_radius=64)
+        self.aw.place(x=260, y=340)
+
+      def Graph(self):
+        class Graph:
+          def __init__(self, win):
+            with open('weights.csv', 'r', newline='') as file:
+              reader = list(csv.reader(file, delimiter=","))
+            dateweight = np.array(reader[0:])
+            xdate = dateweight[:,0]
+            yweight = dateweight[:,1]
+
+            frame = CTkFrame(win,
+                             bg_color="white",
+                             fg_color="white")
+            frame.place()
+
+            fig, ax = plt.subplots()
+            canvas = FigureCanvasTkAgg(fig, master=win)  
+            canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+            ax.plot(xdate, yweight, color="hotpink")
+            
+            canvas.draw()
+
+
+
+        win6=CTk() 
+        graphwin=Graph(win6) 
+        win6.title('Add Weight') 
+        win6.geometry("650x600") 
+        win6.config(bg='white')
+        win6.mainloop()
+
+       
+      def AddWeight(self):
+        class Add:
+          def __init__(self, win):
+
+            Autumn = "Autumn in November"
+            size = 20
+            weight = "bold"
+            labelfont = CTkFont(family=Autumn, size= size, weight= weight)
+
+
+            self.addweight = CTkEntry(win, 
+                                bg_color="white", 
+                                fg_color="white", 
+                                corner_radius=64, 
+                                border_color="hotpink", 
+                                text_color="black")
+            self.addweight.place(x=260, y=270)
+            self.awlabel = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Weight",
+                                font=labelfont)
+            self.awlabel.place(x=290, y=230)
+
+            self.adddate = CTkEntry(win, 
+                                bg_color="white", 
+                                fg_color="white", 
+                                corner_radius=64, 
+                                border_color="hotpink", 
+                                text_color="black")
+            self.adddate.place(x=260,y=340)
+            self.adlabel = CTkLabel(win,
+                                bg_color = "white",
+                                text_color="hotpink",
+                                text="Date",
+                                font=labelfont)
+            self.adlabel.place(x=290, y=300)
+
+            self.title = CTkLabel(win, 
+                   text_color="hotpink", 
+                   text = "All Meals", 
+                   font=titlefont, 
+                   bg_color="white")
+            self.title.place(x=160, y=130)   
+
+            def Submit():
+
+              
+              weight = int(self.addweight.get())
+              date = self.adddate.get()
+              
+              with open('weights.csv', 'a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([date, weight])
+                self.addweight.delete(0, END)
+                self.adddate.delete(0, END)
+
+            self.submit = CTkButton(win,
+                                text = "->",
+                                width=3, 
+                                bg_color="white", 
+                                fg_color="hotpink", 
+                                corner_radius=64, 
+                                text_color="white",
+                                hover_color="hotpink4",
+                                command=Submit)
+            self.submit.place(x=410, y=300)
+        win5=CTk() 
+        weightwin=Add(win5) 
+        win5.title('Add Weight') 
+        win5.geometry("650x600") 
+        win5.config(bg='white')
+        win5.mainloop()
+        
+
+
     win4 = CTk()
-    mealwin = Meals(win4)
-    win4.title('Meals of the Day')
+    mealwin = Weight(win4)
+    win4.title('Weight Tracker')
     win4.geometry("650x600")
     win4.config(bg='white')
     win4.mainloop()
@@ -373,20 +622,14 @@ def Tracker():
     class Meals:
       def __init__(self, win):
         self
-    win5 = CTk()
-    mealwin = Meals(win5)
-    win5.title('Meals of the Day')
-    win5.geometry("650x600")
-    win5.config(bg='white')
-    win5.mainloop()
-    
+   
   def Workouts():
     class Meals:
       def __init__(self, win):
         self
     win6 = CTk()
     mealwin = Meals(win6)
-    win6.title('Meals of the Day')
+    win6.title('Workouts')
     win6.geometry("650x600")
     win6.config(bg='white')
     win6.mainloop()
@@ -396,7 +639,7 @@ def Tracker():
         self
     win7 = CTk()
     mealwin = Meals(win7)
-    win7.title('Meals of the Day')
+    win7.title('Achievements')
     win7.geometry("650x600")
     win7.config(bg='white')
     win7.mainloop()
